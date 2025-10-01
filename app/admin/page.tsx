@@ -126,83 +126,317 @@ export default function AdminPage() {
     const printWindow = window.open('', '_blank');
     if (!printWindow) return;
 
+    // Define question mappings for each type
+    const questionMappings: Record<string, Record<string, string>> = {
+      isi: {
+        a1: 'Kesesuaian dengan Capaian Pembelajaran (CP)',
+        a2: 'Pengembangan Profil Pelajar Pancasila (P3)',
+        a3: 'Kesesuaian dengan Kompetensi Esensial',
+        b1: 'Kebenaran Konsep',
+        b2: 'Ketepatan Terminologi',
+        b3: 'Bebas dari Miskonsepsi',
+        c1: 'Keakuratan Representasi Budaya',
+        c2: 'Penyajian yang Menghargai',
+        c3: 'Relevansi dengan Konteks Siswa',
+        d1: 'Alami dan Tidak Dipaksakan',
+        d2: 'Keseimbangan dan Keadilan Perspektif',
+        d3: 'Mendorong Pemahaman Sintetis'
+      },
+      konstruk: {
+        a1: 'Representasi Komponen Model',
+        a2: 'Operasionalisasi Indikator',
+        b1: 'Relevansi Setiap Item',
+        b2: 'Kelengkapan Aspek',
+        c1: 'Bahasa Indikator',
+        c2: 'Kejelasan Petunjuk',
+        c3: 'Kesesuaian Skala',
+        d1: 'Struktur Instrumen',
+        d2: 'Tata Letak'
+      },
+      guru: {
+        a1: 'Kesesuaian dengan Tujuan',
+        a2: 'Representasi Komponen Model',
+        b1: 'Bahasa dan Kejelasan',
+        b2: 'Kemudahan Pengisian',
+        c1: 'Efisiensi Waktu',
+        c2: 'Kepraktisan',
+        d1: 'Sistematika dan Format',
+        d2: 'Kelengkapan Instrumen'
+      },
+      siswa: {
+        a1: 'Kesesuaian dengan Tujuan',
+        a2: 'Pengalaman Belajar Siswa',
+        b1: 'Bahasa Mudah Dipahami',
+        b2: 'Kejelasan Petunjuk',
+        c1: 'Kemudahan Pengisian',
+        c2: 'Waktu Pengisian',
+        d1: 'Format Menarik',
+        d2: 'Kelengkapan Aspek'
+      }
+    };
+
+    const questions = questionMappings[type] || {};
     const ratingKeys = Object.keys(item.ratings || {}).sort();
-    const ratingsHTML = ratingKeys.map(key => 
-      `<tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>${key.toUpperCase()}</strong></td><td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${item.ratings[key]}</td></tr>`
-    ).join('');
+    
+    const ratingsHTML = ratingKeys.map(key => {
+      const questionText = questions[key.toLowerCase()] || key.toUpperCase();
+      return `<tr>
+        <td style="padding: 12px; border: 1px solid #ddd; font-weight: 500;">${key.toUpperCase()}</td>
+        <td style="padding: 12px; border: 1px solid #ddd;">${questionText}</td>
+        <td style="padding: 12px; border: 1px solid #ddd; text-align: center; font-weight: bold; font-size: 16px; color: #4f46e5;">${item.ratings[key]}</td>
+      </tr>`;
+    }).join('');
+
+    const typeLabels: Record<string, string> = {
+      isi: 'Validasi Isi',
+      konstruk: 'Validasi Konstruk',
+      guru: 'Praktikalitas Guru',
+      siswa: 'Praktikalitas Siswa'
+    };
 
     printWindow.document.write(`
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Detail Validasi - ${item.validator_nama}</title>
+        <title>Laporan Validasi - ${item.validator_nama}</title>
+        <meta charset="UTF-8">
         <style>
-          body { font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
-          h1 { color: #4f46e5; border-bottom: 3px solid #4f46e5; padding-bottom: 10px; }
-          h2 { color: #333; margin-top: 30px; }
-          .info-grid { display: grid; grid-template-columns: 200px 1fr; gap: 10px; margin: 20px 0; }
-          .info-label { font-weight: bold; color: #666; }
-          table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-          th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-          th { background-color: #4f46e5; color: white; }
-          .decision { display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; margin: 10px 0; }
-          .decision.layak-tanpa-revisi { background: #dcfce7; color: #166534; }
-          .decision.layak-revisi-kecil { background: #dbeafe; color: #1e40af; }
-          .decision.layak-revisi-besar { background: #fef3c7; color: #92400e; }
-          .decision.tidak-layak { background: #fee2e2; color: #991b1b; }
-          .signature { margin-top: 30px; }
-          .signature img { max-width: 300px; border: 1px solid #ddd; padding: 10px; }
+          @page { margin: 2cm; }
+          body { 
+            font-family: 'Times New Roman', Times, serif; 
+            line-height: 1.6;
+            color: #000;
+            margin: 0;
+            padding: 0;
+          }
+          .header {
+            text-align: center;
+            border-bottom: 3px double #000;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+          }
+          .header h1 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 5px 0;
+            text-transform: uppercase;
+          }
+          .header h2 {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 5px 0;
+          }
+          .header p {
+            font-size: 12px;
+            margin: 3px 0;
+          }
+          .title {
+            text-align: center;
+            margin: 30px 0 20px 0;
+          }
+          .title h3 {
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 0;
+          }
+          .section {
+            margin: 20px 0;
+          }
+          .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+          }
+          .info-table {
+            width: 100%;
+            margin: 15px 0;
+            border: none;
+          }
+          .info-table td {
+            padding: 5px;
+            border: none;
+          }
+          .info-table td:first-child {
+            width: 200px;
+            font-weight: bold;
+          }
+          table.rating-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0;
+            font-size: 12px;
+          }
+          table.rating-table th, 
+          table.rating-table td { 
+            border: 1px solid #000; 
+            padding: 10px; 
+          }
+          table.rating-table th { 
+            background-color: #f0f0f0; 
+            font-weight: bold;
+            text-align: center;
+          }
+          .avg-row {
+            background-color: #f9f9f9;
+            font-weight: bold;
+            font-size: 14px;
+          }
+          .decision-box {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid #000;
+            font-weight: bold;
+            margin: 10px 0;
+            text-transform: uppercase;
+          }
+          .comment-box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            background: #f9f9f9;
+            margin: 10px 0;
+            text-align: justify;
+          }
+          .signature-section {
+            margin-top: 40px;
+            page-break-inside: avoid;
+          }
+          .signature-container {
+            margin-top: 20px;
+            text-align: center;
+          }
+          .signature-container img {
+            max-width: 200px;
+            max-height: 100px;
+            border: 1px solid #000;
+            padding: 5px;
+          }
+          .footer {
+            margin-top: 50px;
+            border-top: 1px solid #000;
+            padding-top: 15px;
+            font-size: 11px;
+            text-align: center;
+          }
           @media print {
-            body { padding: 20px; }
+            body { margin: 0; }
             button { display: none; }
+            .no-print { display: none; }
           }
         </style>
       </head>
       <body>
-        <h1>Laporan Detail Validasi</h1>
-        <h2>Jenis: ${type.charAt(0).toUpperCase() + type.slice(1)}</h2>
-        
-        <div class="info-grid">
-          <div class="info-label">Nama Validator:</div>
-          <div>${item.validator_nama}</div>
-          <div class="info-label">Institusi:</div>
-          <div>${item.validator_institusi}</div>
-          <div class="info-label">${item.validator_keahlian ? 'Keahlian' : 'Kelas'}:</div>
-          <div>${item.validator_keahlian || item.validator_kelas || '-'}</div>
-          <div class="info-label">Tanggal:</div>
-          <div>${new Date(item.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
+        <div class="header">
+          <h1>Instrumen Validasi Model KESAN</h1>
+          <h2>(Konektivitas Etnosains-Sains)</h2>
+          <p>Peneliti: Irfan Ananda Ismail, S.Pd, M.Pd, Gr.</p>
+          <p>Program Studi S3 Pendidikan IPA - Universitas Negeri Padang</p>
         </div>
 
-        <h2>Penilaian Per Butir</h2>
-        <table>
-          <thead>
+        <div class="title">
+          <h3>LAPORAN HASIL ${typeLabels[type]?.toUpperCase() || type.toUpperCase()}</h3>
+        </div>
+
+        <div class="section">
+          <div class="section-title">I. Identitas Validator</div>
+          <table class="info-table">
             <tr>
-              <th>Butir</th>
-              <th style="text-align: center; width: 100px;">Nilai</th>
+              <td>Nama Validator</td>
+              <td>: ${item.validator_nama}</td>
             </tr>
-          </thead>
-          <tbody>
-            ${ratingsHTML}
-            <tr style="background-color: #f3f4f6; font-weight: bold;">
-              <td style="padding: 12px;">RATA-RATA</td>
-              <td style="padding: 12px; text-align: center; font-size: 18px; color: #4f46e5;">${calculateAverage(item.ratings)}</td>
+            <tr>
+              <td>Institusi</td>
+              <td>: ${item.validator_institusi}</td>
             </tr>
-          </tbody>
-        </table>
-
-        <h2>Keputusan</h2>
-        <div class="decision ${item.decision}">${item.decision.replace(/-/g, ' ').toUpperCase()}</div>
-
-        ${item.general_comments ? `<h2>Komentar Umum</h2><p style="background: #f9fafb; padding: 15px; border-left: 4px solid #4f46e5;">${item.general_comments}</p>` : ''}
-        
-        ${item.suggestions ? `<h2>Saran Perbaikan</h2><p style="background: #f9fafb; padding: 15px; border-left: 4px solid #4f46e5;">${item.suggestions}</p>` : ''}
-
-        <div class="signature">
-          <h2>Tanda Tangan</h2>
-          <img src="${item.signature_url}" alt="Tanda Tangan" />
+            <tr>
+              <td>${item.validator_keahlian ? 'Bidang Keahlian' : 'Kelas'}</td>
+              <td>: ${item.validator_keahlian || item.validator_kelas || '-'}</td>
+            </tr>
+            <tr>
+              <td>Tanggal Validasi</td>
+              <td>: ${new Date(item.created_at).toLocaleDateString('id-ID', { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+              })}</td>
+            </tr>
+          </table>
         </div>
 
-        <button onclick="window.print()" style="margin-top: 30px; padding: 12px 24px; background: #4f46e5; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px;">Cetak Dokumen</button>
+        <div class="section">
+          <div class="section-title">II. Hasil Penilaian</div>
+          <table class="rating-table">
+            <thead>
+              <tr>
+                <th style="width: 80px;">Butir</th>
+                <th>Aspek yang Dinilai</th>
+                <th style="width: 80px;">Skor</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${ratingsHTML}
+              <tr class="avg-row">
+                <td colspan="2" style="text-align: center;">RATA-RATA</td>
+                <td style="text-align: center; color: #000; font-size: 16px;">${calculateAverage(item.ratings)}</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="font-size: 11px; font-style: italic; margin-top: 5px;">
+            *Skala Penilaian: 1 = Sangat Tidak Baik, 2 = Tidak Baik, 3 = Cukup, 4 = Baik, 5 = Sangat Baik
+          </p>
+        </div>
+
+        <div class="section">
+          <div class="section-title">III. Keputusan Validasi</div>
+          <div class="decision-box">${item.decision.replace(/-/g, ' ').toUpperCase()}</div>
+        </div>
+
+        ${item.general_comments ? `
+        <div class="section">
+          <div class="section-title">IV. Komentar Umum</div>
+          <div class="comment-box">${item.general_comments}</div>
+        </div>` : ''}
+        
+        ${item.suggestions ? `
+        <div class="section">
+          <div class="section-title">V. Saran Perbaikan</div>
+          <div class="comment-box">${item.suggestions}</div>
+        </div>` : ''}
+
+        <div class="signature-section">
+          <div class="section-title">Tanda Tangan Validator</div>
+          <div class="signature-container">
+            <img src="${item.signature_url}" alt="Tanda Tangan Validator" />
+            <p style="margin-top: 10px; font-weight: bold;">${item.validator_nama}</p>
+          </div>
+        </div>
+
+        <div class="footer">
+          <p>Dokumen ini dibuat secara elektronik dan sah tanpa tanda tangan basah.</p>
+          <p>Dicetak pada: ${new Date().toLocaleDateString('id-ID', { 
+            day: 'numeric', 
+            month: 'long', 
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          })}</p>
+        </div>
+
+        <button class="no-print" onclick="window.print()" style="
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          padding: 15px 30px;
+          background: #4f46e5;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 16px;
+          font-weight: bold;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        ">🖨️ CETAK DOKUMEN</button>
       </body>
       </html>
     `);
