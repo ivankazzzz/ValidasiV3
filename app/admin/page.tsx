@@ -23,14 +23,28 @@ interface AdminData {
   validasi_konstruk: ValidationData[];
   validasi_praktikalitas_guru: ValidationData[];
   validasi_praktikalitas_siswa: ValidationData[];
+  validasi_lkpd_isi: ValidationData[];
+  validasi_lkpd_konstruk: ValidationData[];
+  validasi_lkpd_praktikalitas_guru: ValidationData[];
+  validasi_lkpd_praktikalitas_siswa: ValidationData[];
 }
 
 interface Summary {
-  total_isi: number;
-  total_konstruk: number;
-  total_guru: number;
-  total_siswa: number;
-  total_all: number;
+  model: {
+    total_isi: number;
+    total_konstruk: number;
+    total_guru: number;
+    total_siswa: number;
+    total: number;
+  };
+  lkpd: {
+    total_isi: number;
+    total_konstruk: number;
+    total_guru: number;
+    total_siswa: number;
+    total: number;
+  };
+  grand_total: number;
 }
 
 export default function AdminPage() {
@@ -38,7 +52,7 @@ export default function AdminPage() {
   const [summary, setSummary] = useState<Summary | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [activeTab, setActiveTab] = useState<'isi' | 'konstruk' | 'guru' | 'siswa'>('isi');
+  const [activeTab, setActiveTab] = useState<'isi' | 'konstruk' | 'guru' | 'siswa' | 'lkpd-isi' | 'lkpd-konstruk' | 'lkpd-guru' | 'lkpd-siswa'>('isi');
 
   const fetchData = async () => {
     setLoading(true);
@@ -555,10 +569,14 @@ export default function AdminPage() {
   }
 
   const tabs = [
-    { id: 'isi' as const, label: 'Validasi Isi', icon: BookOpen, count: summary?.total_isi || 0 },
-    { id: 'konstruk' as const, label: 'Validasi Konstruk', icon: FileText, count: summary?.total_konstruk || 0 },
-    { id: 'guru' as const, label: 'Praktikalitas Guru', icon: GraduationCap, count: summary?.total_guru || 0 },
-    { id: 'siswa' as const, label: 'Praktikalitas Siswa', icon: Users, count: summary?.total_siswa || 0 },
+    { id: 'isi' as const, label: 'Model Isi', icon: BookOpen, count: summary?.model.total_isi || 0, category: 'Model KESAN' },
+    { id: 'konstruk' as const, label: 'Model Konstruk', icon: FileText, count: summary?.model.total_konstruk || 0, category: 'Model KESAN' },
+    { id: 'guru' as const, label: 'Model Praktikalitas Guru', icon: GraduationCap, count: summary?.model.total_guru || 0, category: 'Model KESAN' },
+    { id: 'siswa' as const, label: 'Model Praktikalitas Siswa', icon: Users, count: summary?.model.total_siswa || 0, category: 'Model KESAN' },
+    { id: 'lkpd-isi' as const, label: 'LKPD Isi', icon: BookOpen, count: summary?.lkpd.total_isi || 0, category: 'LKPD Model KESAN' },
+    { id: 'lkpd-konstruk' as const, label: 'LKPD Konstruk', icon: FileText, count: summary?.lkpd.total_konstruk || 0, category: 'LKPD Model KESAN' },
+    { id: 'lkpd-guru' as const, label: 'LKPD Praktikalitas Guru', icon: GraduationCap, count: summary?.lkpd.total_guru || 0, category: 'LKPD Model KESAN' },
+    { id: 'lkpd-siswa' as const, label: 'LKPD Praktikalitas Siswa', icon: Users, count: summary?.lkpd.total_siswa || 0, category: 'LKPD Model KESAN' },
   ];
 
   return (
@@ -590,58 +608,44 @@ export default function AdminPage() {
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-8">
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4 mb-6 md:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 mb-6 md:mb-8">
           <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl shadow-lg p-4 md:p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-indigo-100 text-xs md:text-sm font-medium">Total Semua</p>
-                <p className="text-3xl md:text-4xl font-bold mt-2">{summary?.total_all || 0}</p>
+                <p className="text-indigo-100 text-xs md:text-sm font-medium">Total Semua Data</p>
+                <p className="text-3xl md:text-4xl font-bold mt-2">{summary?.grand_total || 0}</p>
               </div>
               <FileText className="w-10 h-10 md:w-12 md:h-12 text-indigo-200 opacity-80" />
             </div>
           </div>
-          <div className="bg-white rounded-xl shadow-md p-4 md:p-6 border border-gray-200">
+          <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-lg p-4 md:p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-xs md:text-sm font-medium">Validasi Isi</p>
-                <p className="text-2xl md:text-3xl font-bold text-blue-600 mt-2">{summary?.total_isi || 0}</p>
+                <p className="text-blue-100 text-xs md:text-sm font-medium">Total Model KESAN</p>
+                <p className="text-3xl md:text-4xl font-bold mt-2">{summary?.model.total || 0}</p>
               </div>
-              <BookOpen className="w-8 h-8 md:w-10 md:h-10 text-blue-400" />
+              <BookOpen className="w-10 h-10 md:w-12 md:h-12 text-blue-200 opacity-80" />
             </div>
           </div>
-          <div className="bg-white rounded-xl shadow-md p-4 md:p-6 border border-gray-200">
+          <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-xl shadow-lg p-4 md:p-6 text-white">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-gray-600 text-xs md:text-sm font-medium">Validasi Konstruk</p>
-                <p className="text-2xl md:text-3xl font-bold text-purple-600 mt-2">{summary?.total_konstruk || 0}</p>
+                <p className="text-cyan-100 text-xs md:text-sm font-medium">Total LKPD Model KESAN</p>
+                <p className="text-3xl md:text-4xl font-bold mt-2">{summary?.lkpd.total || 0}</p>
               </div>
-              <FileText className="w-8 h-8 md:w-10 md:h-10 text-purple-400" />
-            </div>
-          </div>
-          <div className="bg-white rounded-xl shadow-md p-4 md:p-6 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-xs md:text-sm font-medium">Praktikalitas Guru</p>
-                <p className="text-2xl md:text-3xl font-bold text-green-600 mt-2">{summary?.total_guru || 0}</p>
-              </div>
-              <GraduationCap className="w-8 h-8 md:w-10 md:h-10 text-green-400" />
-            </div>
-          </div>
-          <div className="bg-white rounded-xl shadow-md p-4 md:p-6 border border-gray-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-600 text-xs md:text-sm font-medium">Praktikalitas Siswa</p>
-                <p className="text-2xl md:text-3xl font-bold text-orange-600 mt-2">{summary?.total_siswa || 0}</p>
-              </div>
-              <Users className="w-8 h-8 md:w-10 md:h-10 text-orange-400" />
+              <FileText className="w-10 h-10 md:w-12 md:h-12 text-cyan-200 opacity-80" />
             </div>
           </div>
         </div>
 
         {/* Tabs */}
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          {/* Model KESAN Section */}
+          <div className="border-b border-gray-300 bg-gray-50 px-4 py-2">
+            <h3 className="text-sm font-bold text-gray-700 uppercase">Validasi Model KESAN</h3>
+          </div>
           <div className="flex border-b border-gray-200 overflow-x-auto scrollbar-hide">
-            {tabs.map(tab => {
+            {tabs.filter(t => t.category === 'Model KESAN').map(tab => {
               const Icon = tab.icon;
               return (
                 <button
@@ -665,6 +669,35 @@ export default function AdminPage() {
             })}
           </div>
 
+          {/* LKPD Model KESAN Section */}
+          <div className="border-b border-gray-300 bg-gray-50 px-4 py-2">
+            <h3 className="text-sm font-bold text-gray-700 uppercase">Validasi LKPD Model KESAN</h3>
+          </div>
+          <div className="flex border-b-2 border-gray-300 overflow-x-auto scrollbar-hide">
+            {tabs.filter(t => t.category === 'LKPD Model KESAN').map(tab => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center space-x-2 px-4 md:px-6 py-3 md:py-4 font-medium transition-colors whitespace-nowrap text-sm md:text-base ${
+                    activeTab === tab.id
+                      ? 'text-cyan-600 border-b-2 border-cyan-600 bg-cyan-50'
+                      : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span>{tab.label}</span>
+                  <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                    activeTab === tab.id ? 'bg-cyan-600 text-white' : 'bg-gray-200 text-gray-700'
+                  }`}>
+                    {tab.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
           {/* Table Content */}
           <div className="p-4 md:p-6">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 md:gap-4 mb-4">
@@ -673,7 +706,15 @@ export default function AdminPage() {
               </h2>
               <button
                 onClick={() => {
-                  const currentData = data?.[`validasi_${activeTab === 'guru' ? 'praktikalitas_guru' : activeTab === 'siswa' ? 'praktikalitas_siswa' : activeTab}` as keyof AdminData] || [];
+                  let currentData: ValidationData[] = [];
+                  if (activeTab === 'isi') currentData = data?.validasi_isi || [];
+                  else if (activeTab === 'konstruk') currentData = data?.validasi_konstruk || [];
+                  else if (activeTab === 'guru') currentData = data?.validasi_praktikalitas_guru || [];
+                  else if (activeTab === 'siswa') currentData = data?.validasi_praktikalitas_siswa || [];
+                  else if (activeTab === 'lkpd-isi') currentData = data?.validasi_lkpd_isi || [];
+                  else if (activeTab === 'lkpd-konstruk') currentData = data?.validasi_lkpd_konstruk || [];
+                  else if (activeTab === 'lkpd-guru') currentData = data?.validasi_lkpd_praktikalitas_guru || [];
+                  else if (activeTab === 'lkpd-siswa') currentData = data?.validasi_lkpd_praktikalitas_siswa || [];
                   exportToCSV(activeTab, currentData);
                 }}
                 className="flex items-center space-x-2 px-3 md:px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm md:text-base w-full sm:w-auto justify-center"
@@ -688,6 +729,10 @@ export default function AdminPage() {
                 {activeTab === 'konstruk' && renderTable(data.validasi_konstruk, 'konstruk')}
                 {activeTab === 'guru' && renderTable(data.validasi_praktikalitas_guru, 'guru')}
                 {activeTab === 'siswa' && renderTable(data.validasi_praktikalitas_siswa, 'siswa')}
+                {activeTab === 'lkpd-isi' && renderTable(data.validasi_lkpd_isi, 'lkpd-isi')}
+                {activeTab === 'lkpd-konstruk' && renderTable(data.validasi_lkpd_konstruk, 'lkpd-konstruk')}
+                {activeTab === 'lkpd-guru' && renderTable(data.validasi_lkpd_praktikalitas_guru, 'lkpd-guru')}
+                {activeTab === 'lkpd-siswa' && renderTable(data.validasi_lkpd_praktikalitas_siswa, 'lkpd-siswa')}
               </>
             )}
           </div>

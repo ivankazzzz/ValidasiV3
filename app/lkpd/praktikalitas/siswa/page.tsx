@@ -2,13 +2,14 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Send, Loader2 } from 'lucide-react';
+import { ArrowLeft, Send, Loader2, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import RatingScale from '@/components/RatingScale';
 
 export default function PraktikalitasSiswaLKPDPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const [formData, setFormData] = useState({
     namaSiswa: '',
@@ -56,8 +57,8 @@ export default function PraktikalitasSiswaLKPDPage() {
       const result = await response.json();
 
       if (response.ok) {
-        alert('Validasi berhasil disimpan! Terima kasih atas partisipasi Anda.');
-        router.push('/');
+        setSuccess(true);
+        setTimeout(() => router.push('/'), 2000);
       } else {
         alert(`Error: ${result.error || 'Terjadi kesalahan'}`);
       }
@@ -68,6 +69,20 @@ export default function PraktikalitasSiswaLKPDPage() {
       setIsSubmitting(false);
     }
   };
+
+  if (success) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 flex items-center justify-center">
+        <div className="bg-white rounded-2xl shadow-2xl p-12 text-center max-w-md">
+          <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-6" />
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">Berhasil!</h2>
+          <p className="text-gray-600 text-lg">
+            Data praktikalitas LKPD telah tersimpan. Terima kasih atas partisipasi Anda.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">

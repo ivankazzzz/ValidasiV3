@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Send, Loader2 } from 'lucide-react';
+import { ArrowLeft, Send, Loader2, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import RatingScale from '@/components/RatingScale';
 import SignaturePad from '@/components/SignaturePad';
@@ -10,6 +10,7 @@ import SignaturePad from '@/components/SignaturePad';
 export default function ValidasiIsiLKPDPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [signatureData, setSignatureData] = useState<string>('');
 
   const [formData, setFormData] = useState({
@@ -76,8 +77,8 @@ export default function ValidasiIsiLKPDPage() {
       const result = await response.json();
 
       if (response.ok) {
-        alert('Validasi berhasil disimpan! Terima kasih atas partisipasi Anda.');
-        router.push('/');
+        setSuccess(true);
+        setTimeout(() => router.push('/'), 2000);
       } else {
         alert(`Error: ${result.error || 'Terjadi kesalahan'}`);
       }
@@ -88,6 +89,20 @@ export default function ValidasiIsiLKPDPage() {
       setIsSubmitting(false);
     }
   };
+
+  if (success) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-cyan-50 to-blue-50 flex items-center justify-center">
+        <div className="bg-white rounded-2xl shadow-2xl p-12 text-center max-w-md">
+          <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-6" />
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">Berhasil!</h2>
+          <p className="text-gray-600 text-lg">
+            Data validasi LKPD telah tersimpan. Terima kasih atas kontribusi Anda.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-indigo-50">
