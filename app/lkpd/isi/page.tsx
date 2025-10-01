@@ -50,8 +50,11 @@ export default function ValidasiIsiLKPDPage() {
     }
 
     // Validasi semua rating sudah diisi
-    const ratings = ['a1', 'a2', 'a3', 'a4', 'b1', 'b2', 'b3', 'b4', 'c1', 'c2', 'c3', 'd1', 'd2', 'd3'];
-    const allRated = ratings.every(key => formData[key as keyof typeof formData] > 0);
+    const ratings = ['a1', 'a2', 'a3', 'a4', 'b1', 'b2', 'b3', 'b4', 'c1', 'c2', 'c3', 'd1', 'd2', 'd3'] as const;
+    const allRated = ratings.every(key => {
+      const value = formData[key];
+      return typeof value === 'number' && value > 0;
+    });
     
     if (!allRated) {
       alert('Mohon lengkapi semua penilaian');
