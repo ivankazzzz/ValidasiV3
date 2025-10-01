@@ -87,6 +87,13 @@ export default function AdminPage() {
   };
 
   const getDecisionBadge = (decision: string) => {
+    if (!decision) {
+      return (
+        <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+          N/A
+        </span>
+      );
+    }
     const styles: Record<string, string> = {
       'layak-tanpa-revisi': 'bg-green-100 text-green-800',
       'layak-revisi-kecil': 'bg-blue-100 text-blue-800',
@@ -118,7 +125,7 @@ export default function AdminPage() {
       item.validator_keahlian || item.validator_kelas || '-',
       ...ratingKeys.map(key => item.ratings[key] || '-'),
       calculateAverage(item.ratings),
-      item.decision,
+      item.decision || 'N/A',
       item.general_comments || '-',
       item.suggestions || '-',
       new Date(item.created_at).toLocaleDateString('id-ID'),
@@ -401,10 +408,12 @@ export default function AdminPage() {
           </p>
         </div>
 
+        ${item.decision ? `
         <div class="section">
           <div class="section-title">III. Keputusan Validasi</div>
           <div class="decision-box">${item.decision.replace(/-/g, ' ').toUpperCase()}</div>
         </div>
+        ` : ''}
 
         ${item.general_comments ? `
         <div class="section">
