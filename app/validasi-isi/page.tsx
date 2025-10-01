@@ -130,46 +130,19 @@ export default function ValidasiIsiPage() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Left: Instrumen Model */}
+          {/* Left: PDF Viewer */}
           <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-blue-500 sticky top-24 h-fit">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">📋 Instrumen Model Valid Isi</h2>
-            <div className="prose prose-sm max-w-none text-gray-700 space-y-4">
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h3 className="font-bold text-lg mb-2">A. KESESUAIAN DENGAN KURIKULUM MERDEKA</h3>
-                <ul className="list-disc pl-5 space-y-2">
-                  <li><strong>A.1:</strong> Kesesuaian dengan Capaian Pembelajaran (CP)</li>
-                  <li><strong>A.2:</strong> Pengembangan Profil Pelajar Pancasila (P3)</li>
-                  <li><strong>A.3:</strong> Kesesuaian dengan Kompetensi Esensial</li>
-                </ul>
-              </div>
-              
-              <div className="bg-purple-50 p-4 rounded-lg">
-                <h3 className="font-bold text-lg mb-2">B. AKURASI KONSEPTUAL ILMIAH (SAINS)</h3>
-                <ul className="list-disc pl-5 space-y-2">
-                  <li><strong>B.1:</strong> Kebenaran Konsep</li>
-                  <li><strong>B.2:</strong> Ketepatan Terminologi</li>
-                  <li><strong>B.3:</strong> Bebas dari Miskonsepsi</li>
-                </ul>
-              </div>
-              
-              <div className="bg-green-50 p-4 rounded-lg">
-                <h3 className="font-bold text-lg mb-2">C. OTENTISITAS & RELEVANSI KEARIFAN LOKAL</h3>
-                <ul className="list-disc pl-5 space-y-2">
-                  <li><strong>C.1:</strong> Keakuratan Representasi Budaya</li>
-                  <li><strong>C.2:</strong> Penyajian yang Menghargai</li>
-                  <li><strong>C.3:</strong> Relevansi dengan Konteks Siswa</li>
-                </ul>
-              </div>
-              
-              <div className="bg-yellow-50 p-4 rounded-lg">
-                <h3 className="font-bold text-lg mb-2">D. KOHERENSI DAN KUALITAS INTEGRASI</h3>
-                <ul className="list-disc pl-5 space-y-2">
-                  <li><strong>D.1:</strong> Alami dan Tidak Dipaksakan</li>
-                  <li><strong>D.2:</strong> Keseimbangan dan Keadilan Perspektif</li>
-                  <li><strong>D.3:</strong> Mendorong Pemahaman Sintetis</li>
-                </ul>
-              </div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">📄 Instrumen Validasi Isi</h2>
+            <div className="w-full" style={{ height: '75vh' }}>
+              <iframe
+                src="/Instrumen_Model_Valid_Isi.pdf"
+                className="w-full h-full rounded-lg border-2 border-gray-200"
+                title="Instrumen Validasi Isi"
+              />
             </div>
+            <p className="text-xs text-gray-500 mt-2 text-center">
+              💡 Scroll PDF untuk melihat seluruh instrumen
+            </p>
           </div>
 
           {/* Right: Form Validasi */}

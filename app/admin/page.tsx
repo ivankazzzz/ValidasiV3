@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Download, RefreshCw, Users, FileText, GraduationCap, BookOpen } from 'lucide-react';
+import { ArrowLeft, Download, RefreshCw, Users, FileText, GraduationCap, BookOpen, Printer } from 'lucide-react';
 import Link from 'next/link';
 
 interface ValidationData {
@@ -92,14 +92,21 @@ export default function AdminPage() {
       return;
     }
 
-    const headers = ['No', 'Nama', 'Institusi', 'Keahlian/Kelas', 'Rata-rata', 'Keputusan', 'Tanggal'];
+    // Get all rating keys from first item to determine columns
+    const firstItem = items[0];
+    const ratingKeys = Object.keys(firstItem.ratings || {}).sort();
+    
+    const headers = ['No', 'Nama', 'Institusi', 'Keahlian/Kelas', ...ratingKeys.map(k => k.toUpperCase()), 'Rata-rata', 'Keputusan', 'Komentar', 'Saran', 'Tanggal'];
     const rows = items.map((item, idx) => [
       idx + 1,
       item.validator_nama,
       item.validator_institusi,
       item.validator_keahlian || item.validator_kelas || '-',
+      ...ratingKeys.map(key => item.ratings[key] || '-'),
       calculateAverage(item.ratings),
       item.decision,
+      item.general_comments || '-',
+      item.suggestions || '-',
       new Date(item.created_at).toLocaleDateString('id-ID'),
     ]);
 
@@ -113,6 +120,93 @@ export default function AdminPage() {
     link.href = URL.createObjectURL(blob);
     link.download = `validasi_${type}_${new Date().toISOString().split('T')[0]}.csv`;
     link.click();
+  };
+
+  const printValidator = (item: ValidationData, type: string) => {
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
+
+    const ratingKeys = Object.keys(item.ratings || {}).sort();
+    const ratingsHTML = ratingKeys.map(key => 
+      `<tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>${key.toUpperCase()}</strong></td><td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${item.ratings[key]}</td></tr>`
+    ).join('');
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Detail Validasi - ${item.validator_nama}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
+          h1 { color: #4f46e5; border-bottom: 3px solid #4f46e5; padding-bottom: 10px; }
+          h2 { color: #333; margin-top: 30px; }
+          .info-grid { display: grid; grid-template-columns: 200px 1fr; gap: 10px; margin: 20px 0; }
+          .info-label { font-weight: bold; color: #666; }
+          table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+          th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+          th { background-color: #4f46e5; color: white; }
+          .decision { display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; margin: 10px 0; }
+          .decision.layak-tanpa-revisi { background: #dcfce7; color: #166534; }
+          .decision.layak-revisi-kecil { background: #dbeafe; color: #1e40af; }
+          .decision.layak-revisi-besar { background: #fef3c7; color: #92400e; }
+          .decision.tidak-layak { background: #fee2e2; color: #991b1b; }
+          .signature { margin-top: 30px; }
+          .signature img { max-width: 300px; border: 1px solid #ddd; padding: 10px; }
+          @media print {
+            body { padding: 20px; }
+            button { display: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <h1>Laporan Detail Validasi</h1>
+        <h2>Jenis: ${type.charAt(0).toUpperCase() + type.slice(1)}</h2>
+        
+        <div class="info-grid">
+          <div class="info-label">Nama Validator:</div>
+          <div>${item.validator_nama}</div>
+          <div class="info-label">Institusi:</div>
+          <div>${item.validator_institusi}</div>
+          <div class="info-label">${item.validator_keahlian ? 'Keahlian' : 'Kelas'}:</div>
+          <div>${item.validator_keahlian || item.validator_kelas || '-'}</div>
+          <div class="info-label">Tanggal:</div>
+          <div>${new Date(item.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
+        </div>
+
+        <h2>Penilaian Per Butir</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Butir</th>
+              <th style="text-align: center; width: 100px;">Nilai</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${ratingsHTML}
+            <tr style="background-color: #f3f4f6; font-weight: bold;">
+              <td style="padding: 12px;">RATA-RATA</td>
+              <td style="padding: 12px; text-align: center; font-size: 18px; color: #4f46e5;">${calculateAverage(item.ratings)}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Keputusan</h2>
+        <div class="decision ${item.decision}">${item.decision.replace(/-/g, ' ').toUpperCase()}</div>
+
+        ${item.general_comments ? `<h2>Komentar Umum</h2><p style="background: #f9fafb; padding: 15px; border-left: 4px solid #4f46e5;">${item.general_comments}</p>` : ''}
+        
+        ${item.suggestions ? `<h2>Saran Perbaikan</h2><p style="background: #f9fafb; padding: 15px; border-left: 4px solid #4f46e5;">${item.suggestions}</p>` : ''}
+
+        <div class="signature">
+          <h2>Tanda Tangan</h2>
+          <img src="${item.signature_url}" alt="Tanda Tangan" />
+        </div>
+
+        <button onclick="window.print()" style="margin-top: 30px; padding: 12px 24px; background: #4f46e5; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px;">Cetak Dokumen</button>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
   };
 
   const renderTable = (items: ValidationData[], type: string) => {
@@ -139,7 +233,7 @@ export default function AdminPage() {
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Rata-rata</th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Keputusan</th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tanggal</th>
-              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Tanda Tangan</th>
+              <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Aksi</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -167,14 +261,25 @@ export default function AdminPage() {
                   })}
                 </td>
                 <td className="px-4 py-4 whitespace-nowrap text-sm">
-                  <a 
-                    href={item.signature_url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-indigo-600 hover:text-indigo-800 underline"
-                  >
-                    Lihat
-                  </a>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => printValidator(item, type)}
+                      className="flex items-center space-x-1 px-3 py-1.5 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors text-xs"
+                      title="Cetak Detail"
+                    >
+                      <Printer className="w-3.5 h-3.5" />
+                      <span>Cetak</span>
+                    </button>
+                    <a 
+                      href={item.signature_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors text-xs"
+                      title="Lihat Tanda Tangan"
+                    >
+                      TTD
+                    </a>
+                  </div>
                 </td>
               </tr>
             ))}

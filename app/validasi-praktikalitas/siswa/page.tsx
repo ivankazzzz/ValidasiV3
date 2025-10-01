@@ -138,24 +138,17 @@ export default function ValidasiPraktikalitasSiswaPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-8">
           <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-purple-500 sticky top-24 h-fit">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">📋 Tentang Validasi</h2>
-            <div className="prose prose-sm max-w-none text-gray-700 space-y-4">
-              <div className="bg-purple-50 p-4 rounded-lg">
-                <h3 className="font-bold text-lg mb-2">Tujuan</h3>
-                <p>Menilai kelayakan Instrumen Praktikalitas Model KESAN untuk Siswa yang mengukur kemudahan pemahaman dan pengalaman belajar.</p>
-              </div>
-              <div className="bg-pink-50 p-4 rounded-lg">
-                <h3 className="font-bold text-lg mb-2">Aspek Praktikalitas Siswa</h3>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Kemudahan memahami</li>
-                  <li>Daya tarik pembelajaran</li>
-                  <li>Manfaat belajar</li>
-                  <li>Kolaborasi</li>
-                  <li>Kesesuaian karakteristik</li>
-                  <li>Pengalaman belajar</li>
-                </ul>
-              </div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">📄 Instrumen Praktikalitas Siswa</h2>
+            <div className="w-full" style={{ height: '75vh' }}>
+              <iframe
+                src="/Instrumen_praktikalitas_siswa.pdf"
+                className="w-full h-full rounded-lg border-2 border-gray-200"
+                title="Instrumen Praktikalitas Siswa"
+              />
             </div>
+            <p className="text-xs text-gray-500 mt-2 text-center">
+              💡 Scroll PDF untuk melihat seluruh instrumen
+            </p>
           </div>
 
           <div className="bg-white rounded-xl shadow-lg p-8 border-t-4 border-pink-500">

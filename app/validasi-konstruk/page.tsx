@@ -133,36 +133,19 @@ export default function ValidasiKonstrukPage() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Left: Instrumen Info */}
+          {/* Left: PDF Viewer */}
           <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-purple-500 sticky top-24 h-fit">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">📋 Tentang Validasi Konstruk</h2>
-            <div className="prose prose-sm max-w-none text-gray-700 space-y-4">
-              <div className="bg-purple-50 p-4 rounded-lg">
-                <h3 className="font-bold text-lg mb-2">Tujuan</h3>
-                <p>Mengevaluasi Instrumen Validasi Konstruk yang akan digunakan untuk menilai kerangka teoretis dan struktur internal Model KESAN.</p>
-              </div>
-              
-              <div className="bg-indigo-50 p-4 rounded-lg">
-                <h3 className="font-bold text-lg mb-2">Komponen Model (Joyce, Weil, & Calhoun)</h3>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Sintaks (Fase K, E, S, A, N)</li>
-                  <li>Sistem Sosial</li>
-                  <li>Prinsip Reaksi</li>
-                  <li>Sistem Pendukung</li>
-                  <li>Dampak Pembelajaran</li>
-                </ul>
-              </div>
-              
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h3 className="font-bold text-lg mb-2">Aspek Penilaian</h3>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Validitas konstruk instrumen</li>
-                  <li>Relevansi dan kepentingan item</li>
-                  <li>Kejelasan bahasa</li>
-                  <li>Sistematika dan format</li>
-                </ul>
-              </div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">📄 Instrumen Validasi Konstruk</h2>
+            <div className="w-full" style={{ height: '75vh' }}>
+              <iframe
+                src="/Instrumen_Model_Valid_Konstruk.pdf"
+                className="w-full h-full rounded-lg border-2 border-gray-200"
+                title="Instrumen Validasi Konstruk"
+              />
             </div>
+            <p className="text-xs text-gray-500 mt-2 text-center">
+              💡 Scroll PDF untuk melihat seluruh instrumen
+            </p>
           </div>
 
           {/* Right: Form */}

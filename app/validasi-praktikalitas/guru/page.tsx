@@ -133,23 +133,17 @@ export default function ValidasiPraktikalitasGuruPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-8">
           <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-blue-500 sticky top-24 h-fit">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">📋 Tentang Validasi</h2>
-            <div className="prose prose-sm max-w-none text-gray-700 space-y-4">
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h3 className="font-bold text-lg mb-2">Tujuan</h3>
-                <p>Menilai kelayakan Instrumen Praktikalitas Model KESAN untuk Guru yang mengukur kemudahan penggunaan dan kebermanfaatan dalam pembelajaran IPA.</p>
-              </div>
-              <div className="bg-cyan-50 p-4 rounded-lg">
-                <h3 className="font-bold text-lg mb-2">Aspek Praktikalitas Guru</h3>
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>Kemudahan penggunaan</li>
-                  <li>Efisiensi waktu</li>
-                  <li>Manfaat pembelajaran</li>
-                  <li>Dukungan teknis</li>
-                  <li>Kesesuaian kurikulum</li>
-                </ul>
-              </div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-4">📄 Instrumen Praktikalitas Guru</h2>
+            <div className="w-full" style={{ height: '75vh' }}>
+              <iframe
+                src="/Instrumen_Praktikalitas_Guru.pdf"
+                className="w-full h-full rounded-lg border-2 border-gray-200"
+                title="Instrumen Praktikalitas Guru"
+              />
             </div>
+            <p className="text-xs text-gray-500 mt-2 text-center">
+              💡 Scroll PDF untuk melihat seluruh instrumen
+            </p>
           </div>
 
           <div className="bg-white rounded-xl shadow-lg p-8 border-t-4 border-cyan-500">
