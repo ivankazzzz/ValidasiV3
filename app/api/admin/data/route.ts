@@ -11,30 +11,35 @@ export async function GET() {
       }, { status: 500 });
     }
 
-    // Fetch all validation data from 4 tables
-    const [isiData, konstrukData, guruData, siswaData] = await Promise.all([
+    // Fetch all validation data from 8 tables (4 Model + 4 LKPD)
+    const [isiData, konstrukData, guruData, siswaData, lkpdIsiData, lkpdKonstrukData, lkpdGuruData, lkpdSiswaData] = await Promise.all([
       supabaseAdmin.from('validasi_isi').select('*').order('created_at', { ascending: false }),
       supabaseAdmin.from('validasi_konstruk').select('*').order('created_at', { ascending: false }),
       supabaseAdmin.from('validasi_praktikalitas_guru').select('*').order('created_at', { ascending: false }),
       supabaseAdmin.from('validasi_praktikalitas_siswa').select('*').order('created_at', { ascending: false }),
+      supabaseAdmin.from('validasi_lkpd_isi').select('*').order('created_at', { ascending: false }),
+      supabaseAdmin.from('validasi_lkpd_konstruk').select('*').order('created_at', { ascending: false }),
+      supabaseAdmin.from('validasi_lkpd_praktikalitas_guru').select('*').order('created_at', { ascending: false }),
+      supabaseAdmin.from('validasi_lkpd_praktikalitas_siswa').select('*').order('created_at', { ascending: false }),
     ]);
 
     // Check for errors
-    if (isiData.error) {
-      console.error('Error fetching isi data:', isiData.error);
-      return NextResponse.json({ error: 'Failed to fetch isi data', details: isiData.error.message }, { status: 500 });
-    }
-    if (konstrukData.error) {
-      console.error('Error fetching konstruk data:', konstrukData.error);
-      return NextResponse.json({ error: 'Failed to fetch konstruk data', details: konstrukData.error.message }, { status: 500 });
-    }
-    if (guruData.error) {
-      console.error('Error fetching guru data:', guruData.error);
-      return NextResponse.json({ error: 'Failed to fetch guru data', details: guruData.error.message }, { status: 500 });
-    }
-    if (siswaData.error) {
-      console.error('Error fetching siswa data:', siswaData.error);
-      return NextResponse.json({ error: 'Failed to fetch siswa data', details: siswaData.error.message }, { status: 500 });
+    const errorChecks = [
+      { data: isiData, name: 'isi' },
+      { data: konstrukData, name: 'konstruk' },
+      { data: guruData, name: 'guru' },
+      { data: siswaData, name: 'siswa' },
+      { data: lkpdIsiData, name: 'lkpd_isi' },
+      { data: lkpdKonstrukData, name: 'lkpd_konstruk' },
+      { data: lkpdGuruData, name: 'lkpd_guru' },
+      { data: lkpdSiswaData, name: 'lkpd_siswa' },
+    ];
+
+    for (const { data, name } of errorChecks) {
+      if (data.error) {
+        console.error(`Error fetching ${name} data:`, data.error);
+        return NextResponse.json({ error: `Failed to fetch ${name} data`, details: data.error.message }, { status: 500 });
+      }
     }
 
     // Return combined data
@@ -45,14 +50,32 @@ export async function GET() {
         validasi_konstruk: konstrukData.data || [],
         validasi_praktikalitas_guru: guruData.data || [],
         validasi_praktikalitas_siswa: siswaData.data || [],
+        validasi_lkpd_isi: lkpdIsiData.data || [],
+        validasi_lkpd_konstruk: lkpdKonstrukData.data || [],
+        validasi_lkpd_praktikalitas_guru: lkpdGuruData.data || [],
+        validasi_lkpd_praktikalitas_siswa: lkpdSiswaData.data || [],
       },
       summary: {
-        total_isi: isiData.data?.length || 0,
-        total_konstruk: konstrukData.data?.length || 0,
-        total_guru: guruData.data?.length || 0,
-        total_siswa: siswaData.data?.length || 0,
-        total_all: (isiData.data?.length || 0) + (konstrukData.data?.length || 0) + 
-                   (guruData.data?.length || 0) + (siswaData.data?.length || 0),
+        model: {
+          total_isi: isiData.data?.length || 0,
+          total_konstruk: konstrukData.data?.length || 0,
+          total_guru: guruData.data?.length || 0,
+          total_siswa: siswaData.data?.length || 0,
+          total: (isiData.data?.length || 0) + (konstrukData.data?.length || 0) + 
+                 (guruData.data?.length || 0) + (siswaData.data?.length || 0),
+        },
+        lkpd: {
+          total_isi: lkpdIsiData.data?.length || 0,
+          total_konstruk: lkpdKonstrukData.data?.length || 0,
+          total_guru: lkpdGuruData.data?.length || 0,
+          total_siswa: lkpdSiswaData.data?.length || 0,
+          total: (lkpdIsiData.data?.length || 0) + (lkpdKonstrukData.data?.length || 0) + 
+                 (lkpdGuruData.data?.length || 0) + (lkpdSiswaData.data?.length || 0),
+        },
+        grand_total: (isiData.data?.length || 0) + (konstrukData.data?.length || 0) + 
+                     (guruData.data?.length || 0) + (siswaData.data?.length || 0) +
+                     (lkpdIsiData.data?.length || 0) + (lkpdKonstrukData.data?.length || 0) + 
+                     (lkpdGuruData.data?.length || 0) + (lkpdSiswaData.data?.length || 0),
       }
     });
   } catch (error) {
