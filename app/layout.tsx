@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   authors: [{ name: "Irfan Ananda Ismail, S.Pd, M.Pd, Gr." }],
   creator: "Irfan Ananda Ismail",
   publisher: "Universitas Negeri Padang",
+  metadataBase: new URL("https://validasi-v3.vercel.app"),
   openGraph: {
     type: "website",
     locale: "id_ID",
@@ -28,10 +29,11 @@ export const metadata: Metadata = {
     siteName: "Validasi Instrumen - Irfan",
     images: [
       {
-        url: "/og-image.png",
+        url: "https://validasi-v3.vercel.app/og-image.png",
         width: 1200,
         height: 630,
         alt: "Validasi Instrumen Model KESAN",
+        type: "image/png",
       },
     ],
   },
@@ -39,7 +41,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Validasi Instrumen Model KESAN - Irfan",
     description: "Sistem Validasi Instrumen Model KESAN (Konektivitas Etnosains-Sains) untuk penelitian pendidikan IPA",
-    images: ["/og-image.png"],
+    images: ["https://validasi-v3.vercel.app/og-image.png"],
     creator: "@irfanananda",
   },
   robots: {
