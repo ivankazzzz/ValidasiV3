@@ -11,11 +11,11 @@ interface RatingScaleProps {
 }
 
 const scales = [
-  { value: 1, label: 'STL', color: 'red', fullLabel: 'Sangat Tidak Layak' },
-  { value: 2, label: 'TL', color: 'orange', fullLabel: 'Tidak Layak' },
-  { value: 3, label: 'CL', color: 'yellow', fullLabel: 'Cukup Layak' },
-  { value: 4, label: 'L', color: 'blue', fullLabel: 'Layak' },
-  { value: 5, label: 'SL', color: 'green', fullLabel: 'Sangat Layak' },
+  { value: 1, label: 'Sangat Tidak Layak', color: 'red', shortLabel: 'STL' },
+  { value: 2, label: 'Tidak Layak', color: 'orange', shortLabel: 'TL' },
+  { value: 3, label: 'Cukup Layak', color: 'yellow', shortLabel: 'CL' },
+  { value: 4, label: 'Layak', color: 'blue', shortLabel: 'L' },
+  { value: 5, label: 'Sangat Layak', color: 'green', shortLabel: 'SL' },
 ];
 
 export default function RatingScale({ label, value, onChange, required = true }: RatingScaleProps) {
@@ -25,33 +25,31 @@ export default function RatingScale({ label, value, onChange, required = true }:
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-col gap-2">
         {scales.map((scale) => (
           <button
             key={scale.value}
             type="button"
             onClick={() => onChange(scale.value)}
-            className={`flex-1 min-w-[60px] px-3 py-2 rounded-lg border-2 transition-all duration-200 ${
+            className={`w-full px-4 py-3 rounded-lg border-2 transition-all duration-200 text-left ${
               value === scale.value
                 ? `border-${scale.color}-500 bg-${scale.color}-50 ring-2 ring-${scale.color}-200`
                 : 'border-gray-300 hover:border-gray-400 bg-white'
             }`}
-            title={scale.fullLabel}
           >
-            <div className="text-center">
-              <div className={`font-bold text-sm ${value === scale.value ? `text-${scale.color}-700` : 'text-gray-600'}`}>
+            <div className="flex items-center justify-between">
+              <div className={`font-semibold text-sm md:text-base ${value === scale.value ? `text-${scale.color}-700` : 'text-gray-700'}`}>
                 {scale.label}
               </div>
-              <div className={`text-xs ${value === scale.value ? `text-${scale.color}-600` : 'text-gray-500'}`}>
+              <div className={`font-bold text-lg ${value === scale.value ? `text-${scale.color}-700` : 'text-gray-500'}`}>
                 {scale.value}
               </div>
             </div>
           </button>
         ))}
       </div>
-      <div className="mt-2 flex justify-between text-xs text-gray-500">
-        <span>1 = Sangat Tidak Layak</span>
-        <span>5 = Sangat Layak</span>
+      <div className="mt-3 text-xs text-gray-500 text-center">
+        Pilih salah satu skala penilaian di atas
       </div>
     </div>
   );
