@@ -3,7 +3,16 @@ import { supabase } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate environment variables
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.error('Missing Supabase environment variables');
+      return NextResponse.json({ 
+        error: 'Server configuration error: Missing Supabase credentials' 
+      }, { status: 500 });
+    }
+
     const data = await request.json();
+    console.log('Received validation data for:', data.nama);
     
     // Upload signature to Supabase Storage
     const signatureBlob = await fetch(data.signature).then(r => r.blob());
@@ -18,7 +27,10 @@ export async function POST(request: NextRequest) {
 
     if (uploadError) {
       console.error('Upload error:', uploadError);
-      return NextResponse.json({ error: 'Failed to upload signature' }, { status: 500 });
+      return NextResponse.json({ 
+        error: 'Failed to upload signature', 
+        details: uploadError.message 
+      }, { status: 500 });
     }
 
     // Get public URL
@@ -55,12 +67,19 @@ export async function POST(request: NextRequest) {
 
     if (dbError) {
       console.error('Database error:', dbError);
-      return NextResponse.json({ error: 'Failed to save data' }, { status: 500 });
+      return NextResponse.json({ 
+        error: 'Failed to save data', 
+        details: dbError.message 
+      }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, data: validationData });
   } catch (error) {
     console.error('Error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ 
+      error: 'Internal server error', 
+      details: errorMessage 
+    }, { status: 500 });
   }
 }

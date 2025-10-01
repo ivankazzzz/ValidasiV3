@@ -3,7 +3,16 @@ import { supabase } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
+    // Validate environment variables
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      console.error('Missing Supabase environment variables');
+      return NextResponse.json({ 
+        error: 'Server configuration error: Missing Supabase credentials' 
+      }, { status: 500 });
+    }
+
     const data = await request.json();
+    console.log('Received siswa praktikalitas data for:', data.nama);
     
     const signatureBlob = await fetch(data.signature).then(r => r.blob());
     const fileName = `signature-siswa-${Date.now()}.png`;
