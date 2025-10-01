@@ -315,7 +315,7 @@ export default function ValidasiIsiLKPDPage() {
 
               {/* Signature */}
               <div className="bg-white rounded-xl shadow-lg p-6">
-                <SignaturePad onSave={setSignatureData} />
+                <SignaturePad value={signatureData} onChange={setSignatureData} />
               </div>
 
               {/* Submit Button */}
