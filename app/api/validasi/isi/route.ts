@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
     const signatureBlob = await fetch(data.signature).then(r => r.blob());
     const fileName = `signature-${Date.now()}.png`;
     
-    const { data: uploadData, error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from('signatures')
       .upload(fileName, signatureBlob, {
         contentType: 'image/png',

@@ -55,7 +55,7 @@ export default function ValidasiKonstrukPage() {
     a1: 0, a2: 0, b1: 0, b2: 0, c1: 0, c2: 0, c3: 0, d1: 0, d2: 0,
     comments: '',
     suggestions: '',
-    decision: '' as any,
+    decision: '' as 'tidak-layak' | 'layak-revisi-besar' | 'layak-revisi-kecil' | 'layak-tanpa-revisi' | '',
     signature: '',
   });
 
@@ -220,7 +220,7 @@ export default function ValidasiKonstrukPage() {
                           key={item.id}
                           id={item.id}
                           label={item.label}
-                          value={(formData as any)[item.id]}
+                          value={formData[item.id as keyof typeof formData] as number}
                           onChange={(v) => setFormData({...formData, [item.id]: v})}
                         />
                       ))}
@@ -270,7 +270,7 @@ export default function ValidasiKonstrukPage() {
                         name="decision"
                         value={option.value}
                         checked={formData.decision === option.value}
-                        onChange={(e) => setFormData({...formData, decision: e.target.value})}
+                        onChange={(e) => setFormData({...formData, decision: e.target.value as 'tidak-layak' | 'layak-revisi-besar' | 'layak-revisi-kecil' | 'layak-tanpa-revisi'})}
                         className="w-5 h-5 text-indigo-600"
                         required
                       />

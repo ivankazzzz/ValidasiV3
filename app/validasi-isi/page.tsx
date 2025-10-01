@@ -349,7 +349,7 @@ export default function ValidasiIsiPage() {
                         name="decision"
                         value={option.value}
                         checked={formData.decision === option.value}
-                        onChange={(e) => setFormData({...formData, decision: e.target.value as any})}
+                        onChange={(e) => setFormData({...formData, decision: e.target.value as 'tidak-layak' | 'layak-revisi-besar' | 'layak-revisi-kecil' | 'layak-tanpa-revisi'})}
                         className="w-5 h-5 text-indigo-600"
                         required
                       />

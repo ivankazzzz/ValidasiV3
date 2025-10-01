@@ -18,7 +18,7 @@ const scales = [
   { value: 5, label: 'SL', color: 'green', fullLabel: 'Sangat Layak' },
 ];
 
-export default function RatingScale({ id, label, value, onChange, required = true }: RatingScaleProps) {
+export default function RatingScale({ label, value, onChange, required = true }: RatingScaleProps) {
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:border-indigo-300 transition-colors">
       <label className="block text-sm font-medium text-gray-800 mb-3">

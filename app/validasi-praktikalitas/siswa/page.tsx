@@ -64,7 +64,7 @@ export default function ValidasiPraktikalitasSiswaPage() {
     nama: '', institusi: '', keahlian: '',
     a1: 0, a2: 0, a3: 0, b1: 0, b2: 0, b3: 0,
     c1: 0, c2: 0, c3: 0, c4: 0, d1: 0, d2: 0, d3: 0, e1: 0, e2: 0,
-    comments: '', suggestions: '', decision: '' as any, signature: '',
+    comments: '', suggestions: '', decision: '' as 'tidak-layak' | 'layak-revisi-besar' | 'layak-revisi-kecil' | 'layak-tanpa-revisi' | '', signature: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -185,7 +185,7 @@ export default function ValidasiPraktikalitasSiswaPage() {
                     <div className="space-y-3">
                       {section.items.map((item) => (
                         <RatingScale key={item.id} id={item.id} label={item.label}
-                          value={(formData as any)[item.id]}
+                          value={formData[item.id as keyof typeof formData] as number}
                           onChange={(v) => setFormData({...formData, [item.id]: v})} />
                       ))}
                     </div>
@@ -218,7 +218,7 @@ export default function ValidasiPraktikalitasSiswaPage() {
                   ].map((option) => (
                     <label key={option.value} className="flex items-center space-x-3 p-3 border-2 border-gray-300 rounded-lg hover:border-purple-400 cursor-pointer transition-colors">
                       <input type="radio" name="decision" value={option.value} checked={formData.decision === option.value}
-                        onChange={(e) => setFormData({...formData, decision: e.target.value})}
+                        onChange={(e) => setFormData({...formData, decision: e.target.value as 'tidak-layak' | 'layak-revisi-besar' | 'layak-revisi-kecil' | 'layak-tanpa-revisi'})}
                         className="w-5 h-5 text-purple-600" required />
                       <span className="text-gray-700 font-medium">{option.label}</span>
                     </label>
