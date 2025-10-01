@@ -86,13 +86,18 @@ export default function ValidasiKonstrukPage() {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) throw new Error('Gagal menyimpan data');
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Server error:', errorData);
+        throw new Error(errorData.details || errorData.error || 'Gagal menyimpan data');
+      }
 
       setSuccess(true);
       setTimeout(() => router.push('/'), 2000);
     } catch (error) {
-      alert('Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
-      console.error(error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Terjadi kesalahan: ${errorMessage}`);
+      console.error('Full error:', error);
     } finally {
       setLoading(false);
     }

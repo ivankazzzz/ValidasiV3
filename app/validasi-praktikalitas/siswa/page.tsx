@@ -1,7 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowLeft, Save, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Save, CheckCircle } from 'luci      setSuccess(true);
+      setTimeout(() => router.push('/'), 2000);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Terjadi kesalahan: ${errorMessage}`);
+      console.error('Full error:', error);
+    } finally {
+      setLoading(false);
+    }';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import SignaturePad from '@/components/SignaturePad';
@@ -95,12 +103,17 @@ export default function ValidasiPraktikalitasSiswaPage() {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) throw new Error('Gagal menyimpan data');
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Server error:', errorData);
+        throw new Error(errorData.details || errorData.error || 'Gagal menyimpan data');
+      }
       setSuccess(true);
       setTimeout(() => router.push('/'), 2000);
     } catch (error) {
-      alert('Terjadi kesalahan. Silakan coba lagi.');
-      console.error(error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Terjadi kesalahan: ${errorMessage}`);
+      console.error('Full error:', error);
     } finally {
       setLoading(false);
     }
