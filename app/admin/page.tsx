@@ -10,7 +10,7 @@ interface ValidationData {
   validator_institusi: string;
   validator_keahlian?: string;
   validator_kelas?: string;
-  ratings: any;
+  ratings: Record<string, number>;
   decision: string;
   general_comments?: string;
   suggestions?: string;
@@ -64,7 +64,7 @@ export default function AdminPage() {
     fetchData();
   }, []);
 
-  const calculateAverage = (ratings: any): string => {
+  const calculateAverage = (ratings: Record<string, number>): string => {
     if (!ratings || typeof ratings !== 'object') return 'N/A';
     const values = Object.values(ratings).filter((v): v is number => typeof v === 'number');
     if (values.length === 0) return 'N/A';
