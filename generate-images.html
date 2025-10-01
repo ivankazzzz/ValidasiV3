@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Favicon & OG Image</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #4F46E5; }
+        .preview {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+        }
+        button {
+            background: #4F46E5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #4338CA;
+        }
+        canvas {
+            border: 1px solid #e2e8f0;
+            margin: 10px;
+        }
+        .success {
+            color: #10b981;
+            padding: 10px;
+            background: #d1fae5;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Generate Favicon & OG Image</h1>
+        <p>Tool untuk generate favicon.ico dan og-image.png untuk situs validasi instrumen</p>
+
+        <div class="preview">
+            <h2>1. Favicon Preview (32x32)</h2>
+            <canvas id="faviconCanvas" width="32" height="32"></canvas>
+            <button onclick="downloadFavicon32()">Download favicon-32x32.png</button>
+            <button onclick="downloadICO()">Download favicon.ico (Multi-size)</button>
+        </div>
+
+        <div class="preview">
+            <h2>2. Open Graph Image Preview (1200x630)</h2>
+            <canvas id="ogCanvas" width="1200" height="630" style="max-width: 100%; height: auto;"></canvas>
+            <button onclick="downloadOGImage()">Download og-image.png</button>
+        </div>
+
+        <div id="status"></div>
+
+        <div class="preview">
+            <h3>📋 Langkah Instalasi:</h3>
+            <ol>
+                <li>Download <code>favicon.ico</code> → simpan di folder <code>validasi-app/app/</code></li>
+                <li>Download <code>og-image.png</code> → simpan di folder <code>validasi-app/public/</code></li>
+                <li>Hapus file <code>favicon.svg</code> jika tidak diperlukan</li>
+                <li>Deploy dan test share di WhatsApp/Twitter/Facebook</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Draw 32x32 Favicon
+        function drawFavicon(canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Background
+            ctx.fillStyle = '#4F46E5';
+            ctx.fillRect(0, 0, 32, 32);
+            
+            // Book pages
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(6, 8, 8, 16); // Left page
+            ctx.fillRect(18, 8, 8, 16); // Right page
+            
+            // Spine
+            ctx.fillStyle = '#312E81';
+            ctx.fillRect(14, 8, 4, 16);
+            
+            // Lines on pages (simplified)
+            ctx.strokeStyle = '#C7D2FE';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(8, 12);
+            ctx.lineTo(12, 12);
+            ctx.moveTo(8, 16);
+            ctx.lineTo(12, 16);
+            ctx.moveTo(8, 20);
+            ctx.lineTo(12, 20);
+            ctx.moveTo(20, 12);
+            ctx.lineTo(24, 12);
+            ctx.moveTo(20, 16);
+            ctx.lineTo(24, 16);
+            ctx.moveTo(20, 20);
+            ctx.lineTo(24, 20);
+            ctx.stroke();
+        }
+
+        // Draw 1200x630 OG Image
+        function drawOGImage(canvas) {
+            const ctx = canvas.getContext('2d');
+            
+            // Gradient background
+            const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+            gradient.addColorStop(0, '#4F46E5');
+            gradient.addColorStop(0.5, '#6366F1');
+            gradient.addColorStop(1, '#818CF8');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 1200, 630);
+            
+            // Decorative circles
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.beginPath();
+            ctx.arc(100, 100, 80, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(1100, 530, 100, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(950, 150, 60, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // White rounded rectangle
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+            roundRect(ctx, 80, 80, 1040, 470, 20);
+            ctx.fill();
+            
+            // Book icon (scaled up)
+            ctx.fillStyle = '#4F46E5';
+            ctx.fillRect(120, 180, 80, 120);
+            ctx.fillStyle = '#6366F1';
+            ctx.fillRect(220, 180, 80, 120);
+            ctx.fillStyle = '#312E81';
+            ctx.fillRect(200, 180, 20, 120);
+            
+            // Lines on book
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            [30, 50, 70].forEach(y => {
+                ctx.moveTo(135, 180 + y);
+                ctx.lineTo(185, 180 + y);
+                ctx.moveTo(235, 180 + y);
+                ctx.lineTo(285, 180 + y);
+            });
+            ctx.stroke();
+            
+            // Text
+            ctx.fillStyle = '#1E293B';
+            ctx.font = 'bold 56px Arial, sans-serif';
+            ctx.fillText('Validasi Instrumen', 400, 210);
+            
+            ctx.fillStyle = '#4F46E5';
+            ctx.font = '600 48px Arial, sans-serif';
+            ctx.fillText('Model KESAN', 400, 280);
+            
+            ctx.fillStyle = '#64748B';
+            ctx.font = '32px Arial, sans-serif';
+            ctx.fillText('(Konektivitas Etnosains-Sains)', 400, 340);
+            
+            // Separator line
+            ctx.strokeStyle = '#CBD5E1';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(400, 370);
+            ctx.lineTo(1050, 370);
+            ctx.stroke();
+            
+            // Description
+            ctx.fillStyle = '#475569';
+            ctx.font = '24px Arial, sans-serif';
+            ctx.fillText('Sistem validasi instrumen penelitian untuk', 400, 420);
+            ctx.fillText('mengukur kelayakan Model Pembelajaran IPA', 400, 455);
+            
+            // Footer line
+            ctx.strokeStyle = '#CBD5E1';
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(80, 550);
+            ctx.lineTo(1120, 550);
+            ctx.stroke();
+            
+            // Footer text
+            ctx.fillStyle = '#1E293B';
+            ctx.font = '600 20px Arial, sans-serif';
+            ctx.fillText('Irfan Ananda Ismail, S.Pd, M.Pd, Gr.', 120, 595);
+            
+            ctx.fillStyle = '#64748B';
+            ctx.font = '20px Arial, sans-serif';
+            ctx.fillText('S3 Pendidikan IPA - UNP', 900, 595);
+        }
+
+        // Helper function for rounded rectangle
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        // Download functions
+        function downloadFavicon32() {
+            const canvas = document.getElementById('faviconCanvas');
+            const link = document.createElement('a');
+            link.download = 'favicon-32x32.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            showStatus('✅ favicon-32x32.png downloaded! Simpan ke validasi-app/app/');
+        }
+
+        function downloadICO() {
+            // For .ico, we'll create multiple sizes
+            const sizes = [16, 32, 48];
+            const canvases = sizes.map(size => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                
+                // Scale and draw favicon
+                ctx.scale(size/32, size/32);
+                
+                // Background
+                ctx.fillStyle = '#4F46E5';
+                ctx.fillRect(0, 0, 32, 32);
+                
+                // Book
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(6, 8, 8, 16);
+                ctx.fillRect(18, 8, 8, 16);
+                ctx.fillStyle = '#312E81';
+                ctx.fillRect(14, 8, 4, 16);
+                
+                // Lines
+                ctx.strokeStyle = '#C7D2FE';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                [12, 16, 20].forEach(y => {
+                    ctx.moveTo(8, y);
+                    ctx.lineTo(12, y);
+                    ctx.moveTo(20, y);
+                    ctx.lineTo(24, y);
+                });
+                ctx.stroke();
+                
+                return canvas;
+            });
+            
+            // Download 32x32 as .ico (browser will handle)
+            const link = document.createElement('a');
+            link.download = 'favicon.ico';
+            link.href = canvases[1].toDataURL('image/x-icon');
+            link.click();
+            showStatus('✅ favicon.ico downloaded! Simpan ke validasi-app/app/favicon.ico');
+        }
+
+        function downloadOGImage() {
+            const canvas = document.getElementById('ogCanvas');
+            const link = document.createElement('a');
+            link.download = 'og-image.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            showStatus('✅ og-image.png downloaded! Simpan ke validasi-app/public/og-image.png');
+        }
+
+        function showStatus(message) {
+            const status = document.getElementById('status');
+            status.innerHTML = `<div class="success">${message}</div>`;
+            setTimeout(() => status.innerHTML = '', 5000);
+        }
+
+        // Initialize
+        window.onload = function() {
+            drawFavicon(document.getElementById('faviconCanvas'));
+            drawOGImage(document.getElementById('ogCanvas'));
+        };
+    </script>
+</body>
+</html>
