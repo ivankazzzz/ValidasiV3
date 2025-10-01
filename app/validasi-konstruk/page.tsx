@@ -119,24 +119,24 @@ export default function ValidasiKonstrukPage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-50 via-indigo-50 to-blue-50 pb-12">
-      <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white py-6 shadow-lg sticky top-0 z-10">
+      <div className="bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white py-4 md:py-6 shadow-lg sticky top-0 z-10">
         <div className="container mx-auto px-4">
-          <Link href="/" className="inline-flex items-center text-purple-100 hover:text-white mb-2 transition-colors">
-            <ArrowLeft className="w-5 h-5 mr-2" />
+          <Link href="/" className="inline-flex items-center text-purple-100 hover:text-white mb-2 transition-colors text-sm md:text-base">
+            <ArrowLeft className="w-4 h-4 md:w-5 md:h-5 mr-2" />
             Kembali
           </Link>
-          <h1 className="text-3xl md:text-4xl font-bold">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">
             Lembar Validasi Instrumen Konstruk
           </h1>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-2 gap-8">
+      <div className="container mx-auto px-4 py-4 md:py-8">
+        <div className="grid lg:grid-cols-2 gap-4 md:gap-8">
           {/* Left: PDF Viewer */}
-          <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-purple-500 sticky top-24 h-fit">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">📄 Instrumen Validasi Konstruk</h2>
-            <div className="w-full" style={{ height: '75vh' }}>
+          <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 border-t-4 border-purple-500 lg:sticky lg:top-24 h-fit">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-3 md:mb-4">📄 Instrumen Validasi Konstruk</h2>
+            <div className="w-full" style={{ height: '50vh', minHeight: '400px' }}>
               <iframe
                 src="/Instrumen_Model_Valid_Konstruk.pdf"
                 className="w-full h-full rounded-lg border-2 border-gray-200"
@@ -149,13 +149,13 @@ export default function ValidasiKonstrukPage() {
           </div>
 
           {/* Right: Form */}
-          <div className="bg-white rounded-xl shadow-lg p-8 border-t-4 border-indigo-500">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">✍️ Form Penilaian</h2>
+          <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 lg:p-8 border-t-4 border-indigo-500">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 md:mb-6">✍️ Form Penilaian</h2>
             
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
               {/* Identitas */}
-              <div className="bg-indigo-50 p-6 rounded-lg space-y-4">
-                <h3 className="text-xl font-bold text-indigo-900 mb-4">A. Identitas Validator</h3>
+              <div className="bg-indigo-50 p-4 md:p-6 rounded-lg space-y-3 md:space-y-4">
+                <h3 className="text-lg md:text-xl font-bold text-indigo-900 mb-3 md:mb-4">A. Identitas Validator</h3>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Nama <span className="text-red-500">*</span>
@@ -164,7 +164,7 @@ export default function ValidasiKonstrukPage() {
                     type="text"
                     value={formData.nama}
                     onChange={(e) => setFormData({...formData, nama: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm md:text-base"
                     required
                   />
                 </div>
@@ -176,7 +176,7 @@ export default function ValidasiKonstrukPage() {
                     type="text"
                     value={formData.institusi}
                     onChange={(e) => setFormData({...formData, institusi: e.target.value})}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full px-3 md:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm md:text-base"
                     required
                   />
                 </div>

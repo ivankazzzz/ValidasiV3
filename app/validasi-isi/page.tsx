@@ -128,12 +128,12 @@ export default function ValidasiIsiPage() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-2 gap-8">
+      <div className="container mx-auto px-4 py-4 md:py-8">
+        <div className="grid lg:grid-cols-2 gap-4 md:gap-8">
           {/* Left: PDF Viewer */}
-          <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-blue-500 sticky top-24 h-fit">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">📄 Instrumen Validasi Isi</h2>
-            <div className="w-full" style={{ height: '75vh' }}>
+          <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 border-t-4 border-blue-500 lg:sticky lg:top-24 h-fit">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-3 md:mb-4">📄 Instrumen Validasi Isi</h2>
+            <div className="w-full" style={{ height: '50vh', minHeight: '400px' }}>
               <iframe
                 src="/Instrumen_Model_Valid_Isi.pdf"
                 className="w-full h-full rounded-lg border-2 border-gray-200"

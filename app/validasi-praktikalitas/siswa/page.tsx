@@ -135,11 +135,11 @@ export default function ValidasiPraktikalitasSiswaPage() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-2 gap-8">
-          <div className="bg-white rounded-xl shadow-lg p-6 border-t-4 border-purple-500 sticky top-24 h-fit">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">📄 Instrumen Praktikalitas Siswa</h2>
-            <div className="w-full" style={{ height: '75vh' }}>
+      <div className="container mx-auto px-4 py-4 md:py-8">
+        <div className="grid lg:grid-cols-2 gap-4 md:gap-8">
+          <div className="bg-white rounded-xl shadow-lg p-4 md:p-6 border-t-4 border-purple-500 lg:sticky lg:top-24 h-fit">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800 mb-3 md:mb-4">📄 Instrumen Praktikalitas Siswa</h2>
+            <div className="w-full" style={{ height: '50vh', minHeight: '400px' }}>
               <iframe
                 src="/Instrumen_praktikalitas_siswa.pdf"
                 className="w-full h-full rounded-lg border-2 border-gray-200"
