@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { FileText, Users, ClipboardCheck } from 'lucide-react';
+import { FileText, Users, ClipboardCheck, Shield } from 'lucide-react';
 
 export default function Home() {
   return (
@@ -7,12 +7,23 @@ export default function Home() {
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white py-8 shadow-lg">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-center mb-3">
-            Sistem Validasi Instrumen
-          </h1>
-          <p className="text-center text-blue-100 text-lg md:text-xl">
-            Model KESAN (Konektivitas Etnosains-Sains)
-          </p>
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <h1 className="text-4xl md:text-5xl font-bold text-center mb-3">
+                Sistem Validasi Instrumen
+              </h1>
+              <p className="text-center text-blue-100 text-lg md:text-xl">
+                Model KESAN (Konektivitas Etnosains-Sains)
+              </p>
+            </div>
+            <Link 
+              href="/admin" 
+              className="hidden md:flex items-center space-x-2 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors backdrop-blur-sm border border-white/30"
+            >
+              <Shield className="w-5 h-5" />
+              <span className="font-semibold">Admin</span>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -96,6 +107,17 @@ export default function Home() {
               <p className="text-gray-700 font-medium">
                 📝 Semua data yang Anda masukkan akan tersimpan dengan aman di database
               </p>
+            </div>
+            
+            {/* Mobile Admin Link */}
+            <div className="mt-6 md:hidden">
+              <Link 
+                href="/admin"
+                className="inline-flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg"
+              >
+                <Shield className="w-5 h-5" />
+                <span className="font-semibold">Halaman Admin</span>
+              </Link>
             </div>
           </div>
         </div>
