@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate OG Image with Photo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #4F46E5; }
+        .preview {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border: 2px dashed #cbd5e1;
+            border-radius: 8px;
+        }
+        button {
+            background: #4F46E5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #4338CA;
+        }
+        canvas {
+            border: 1px solid #e2e8f0;
+            margin: 10px 0;
+            max-width: 100%;
+            height: auto;
+        }
+        .success {
+            color: #10b981;
+            padding: 10px;
+            background: #d1fae5;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        input[type="file"] {
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📸 Generate OG Image dengan Foto Profil</h1>
+        <p>Upload foto profil untuk membuat Open Graph image baru</p>
+
+        <div class="preview">
+            <h2>1. Upload Foto Profil (ivan.png)</h2>
+            <input type="file" id="photoInput" accept="image/*">
+            <p style="color: #64748B;">Atau foto akan di-load otomatis dari /ivan.png</p>
+        </div>
+
+        <div class="preview">
+            <h2>2. Preview OG Image (1200x630)</h2>
+            <canvas id="ogCanvas" width="1200" height="630"></canvas>
+            <br>
+            <button onclick="downloadOGImage()">Download og-image.png</button>
+            <button onclick="regenerateImage()">Regenerate</button>
+        </div>
+
+        <div id="status"></div>
+
+        <div class="preview">
+            <h3>📋 Langkah Instalasi:</h3>
+            <ol>
+                <li>Upload foto atau biarkan load otomatis</li>
+                <li>Klik "Download og-image.png"</li>
+                <li>Replace file di <code>validasi-app/public/og-image.png</code></li>
+                <li>Commit dan push ke GitHub</li>
+                <li>Force scrape di Facebook Debugger</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        let photoImage = null;
+
+        // Load photo automatically
+        function loadPhoto() {
+            const img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = function() {
+                photoImage = img;
+                drawOGImage();
+                showStatus('✅ Foto berhasil dimuat!');
+            };
+            img.onerror = function() {
+                showStatus('⚠️ Gagal load foto otomatis. Silakan upload manual.');
+            };
+            // Try to load from local file or server
+            img.src = '/ivan.png?' + Date.now(); // Add cache buster
+        }
+
+        // Handle file upload
+        document.getElementById('photoInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        photoImage = img;
+                        drawOGImage();
+                        showStatus('✅ Foto berhasil di-upload!');
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function drawOGImage() {
+            const canvas = document.getElementById('ogCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, 1200, 630);
+            
+            // Gradient background
+            const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+            gradient.addColorStop(0, '#4F46E5');
+            gradient.addColorStop(0.5, '#6366F1');
+            gradient.addColorStop(1, '#818CF8');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 1200, 630);
+            
+            // Decorative circles
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.beginPath();
+            ctx.arc(100, 100, 80, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(1100, 530, 100, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(950, 150, 60, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // White rounded rectangle
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+            roundRect(ctx, 80, 80, 1040, 470, 20);
+            ctx.fill();
+            
+            // Draw photo in circle (left side)
+            if (photoImage) {
+                ctx.save();
+                
+                // Circle clipping path
+                const photoX = 220;
+                const photoY = 240;
+                const photoRadius = 110;
+                
+                ctx.beginPath();
+                ctx.arc(photoX, photoY, photoRadius, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.clip();
+                
+                // Draw photo scaled to fit circle
+                const scale = Math.max(
+                    (photoRadius * 2) / photoImage.width,
+                    (photoRadius * 2) / photoImage.height
+                );
+                const scaledWidth = photoImage.width * scale;
+                const scaledHeight = photoImage.height * scale;
+                const x = photoX - scaledWidth / 2;
+                const y = photoY - scaledHeight / 2;
+                
+                ctx.drawImage(photoImage, x, y, scaledWidth, scaledHeight);
+                ctx.restore();
+                
+                // Circle border
+                ctx.strokeStyle = '#4F46E5';
+                ctx.lineWidth = 6;
+                ctx.beginPath();
+                ctx.arc(photoX, photoY, photoRadius, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                // White outer border
+                ctx.strokeStyle = '#FFFFFF';
+                ctx.lineWidth = 8;
+                ctx.beginPath();
+                ctx.arc(photoX, photoY, photoRadius + 7, 0, Math.PI * 2);
+                ctx.stroke();
+            } else {
+                // Placeholder circle if no photo
+                ctx.fillStyle = '#E5E7EB';
+                ctx.beginPath();
+                ctx.arc(220, 240, 110, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Icon placeholder
+                ctx.fillStyle = '#9CA3AF';
+                ctx.font = '80px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('👤', 220, 240);
+            }
+            
+            // Text Content (right side)
+            ctx.fillStyle = '#1E293B';
+            ctx.font = 'bold 52px Arial, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('Validasi Instrumen', 400, 180);
+            
+            ctx.fillStyle = '#4F46E5';
+            ctx.font = '600 44px Arial, sans-serif';
+            ctx.fillText('Model KESAN', 400, 240);
+            
+            ctx.fillStyle = '#64748B';
+            ctx.font = '28px Arial, sans-serif';
+            ctx.fillText('(Konektivitas Etnosains-Sains)', 400, 290);
+            
+            // Separator line
+            ctx.strokeStyle = '#CBD5E1';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(400, 320);
+            ctx.lineTo(1050, 320);
+            ctx.stroke();
+            
+            // Description
+            ctx.fillStyle = '#475569';
+            ctx.font = '22px Arial, sans-serif';
+            ctx.fillText('Sistem validasi instrumen penelitian untuk', 400, 365);
+            ctx.fillText('mengukur kelayakan Model Pembelajaran IPA', 400, 395);
+            
+            // Book icon (smaller, top right)
+            const bookX = 980;
+            const bookY = 130;
+            const bookScale = 0.6;
+            
+            ctx.save();
+            ctx.translate(bookX, bookY);
+            ctx.scale(bookScale, bookScale);
+            
+            ctx.fillStyle = '#4F46E5';
+            ctx.fillRect(0, 0, 80, 120);
+            ctx.fillStyle = '#6366F1';
+            ctx.fillRect(100, 0, 80, 120);
+            ctx.fillStyle = '#312E81';
+            ctx.fillRect(80, 0, 20, 120);
+            
+            ctx.strokeStyle = '#FFFFFF';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            [30, 50, 70].forEach(y => {
+                ctx.moveTo(15, y);
+                ctx.lineTo(65, y);
+                ctx.moveTo(115, y);
+                ctx.lineTo(165, y);
+            });
+            ctx.stroke();
+            
+            ctx.restore();
+            
+            // Footer line
+            ctx.strokeStyle = '#CBD5E1';
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(80, 480);
+            ctx.lineTo(1120, 480);
+            ctx.stroke();
+            
+            // Footer text
+            ctx.fillStyle = '#1E293B';
+            ctx.font = '600 22px Arial, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('Irfan Ananda Ismail, S.Pd, M.Pd, Gr.', 120, 525);
+            
+            ctx.fillStyle = '#64748B';
+            ctx.font = '20px Arial, sans-serif';
+            ctx.textAlign = 'right';
+            ctx.fillText('S3 Pendidikan IPA - UNP', 1080, 525);
+        }
+
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        function downloadOGImage() {
+            const canvas = document.getElementById('ogCanvas');
+            const link = document.createElement('a');
+            link.download = 'og-image.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            showStatus('✅ og-image.png downloaded! Replace file di validasi-app/public/og-image.png');
+        }
+
+        function regenerateImage() {
+            drawOGImage();
+            showStatus('🔄 Image regenerated!');
+        }
+
+        function showStatus(message) {
+            const status = document.getElementById('status');
+            status.innerHTML = `<div class="success">${message}</div>`;
+            setTimeout(() => status.innerHTML = '', 5000);
+        }
+
+        // Initialize
+        window.onload = function() {
+            // Try to load photo automatically
+            loadPhoto();
+            // Draw initial canvas (will show placeholder if photo not loaded yet)
+            setTimeout(drawOGImage, 100);
+        };
+    </script>
+</body>
+</html>

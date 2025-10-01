@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Graph Image Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #4F46E5; }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border-left: 4px solid #4F46E5;
+            border-radius: 4px;
+        }
+        .preview {
+            margin: 20px 0;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .preview img {
+            width: 100%;
+            display: block;
+        }
+        .meta-tags {
+            background: #1e293b;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .success { color: #10b981; }
+        .warning { color: #f59e0b; }
+        .error { color: #ef4444; }
+        button {
+            background: #4F46E5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #4338CA;
+        }
+        .link-box {
+            padding: 15px;
+            background: #f1f5f9;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .link-box a {
+            color: #4F46E5;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .link-box a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Open Graph Image Tester</h1>
+        <p>Tool untuk test dan debug Open Graph image untuk social media sharing</p>
+
+        <div class="section">
+            <h2>✅ Image File Status</h2>
+            <p id="imageStatus">Checking...</p>
+            <div class="preview">
+                <img src="https://validasi-v3.vercel.app/og-image.png" 
+                     alt="OG Image Preview"
+                     onload="imageLoaded()"
+                     onerror="imageFailed()">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📋 Meta Tags di Server</h2>
+            <div class="meta-tags">
+&lt;meta property="og:image" content="https://validasi-v3.vercel.app/og-image.png"/&gt;
+&lt;meta property="og:image:width" content="1200"/&gt;
+&lt;meta property="og:image:height" content="630"/&gt;
+&lt;meta property="og:image:alt" content="Validasi Instrumen Model KESAN"/&gt;
+&lt;meta property="og:image:type" content="image/png"/&gt;
+&lt;meta property="og:title" content="Validasi Instrumen Model KESAN - Irfan"/&gt;
+&lt;meta property="og:description" content="Sistem Validasi Instrumen Model KESAN (Konektivitas Etnosains-Sains)"/&gt;
+&lt;meta property="og:url" content="https://validasi-v3.vercel.app"/&gt;
+&lt;meta property="og:type" content="website"/&gt;
+&lt;meta property="og:locale" content="id_ID"/&gt;
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🧪 Test di Social Media Validators</h2>
+            
+            <div class="link-box">
+                <strong>1. Facebook Sharing Debugger</strong><br>
+                <a href="https://developers.facebook.com/tools/debug/?q=https://validasi-v3.vercel.app" 
+                   target="_blank">
+                   Test di Facebook Debugger →
+                </a>
+                <p class="warning">⚠️ Klik "Scrape Again" 2-3 kali untuk update cache!</p>
+            </div>
+
+            <div class="link-box">
+                <strong>2. Twitter Card Validator</strong><br>
+                <a href="https://cards-dev.twitter.com/validator" 
+                   target="_blank">
+                   Test di Twitter Card Validator →
+                </a>
+                <p>Paste URL: <code>https://validasi-v3.vercel.app</code></p>
+            </div>
+
+            <div class="link-box">
+                <strong>3. LinkedIn Post Inspector</strong><br>
+                <a href="https://www.linkedin.com/post-inspector/" 
+                   target="_blank">
+                   Test di LinkedIn Inspector →
+                </a>
+            </div>
+
+            <div class="link-box">
+                <strong>4. OpenGraph.xyz Checker</strong><br>
+                <a href="https://www.opengraph.xyz/url/https://validasi-v3.vercel.app" 
+                   target="_blank">
+                   Test di OpenGraph.xyz →
+                </a>
+            </div>
+
+            <div class="link-box">
+                <strong>5. WhatsApp Link Preview</strong><br>
+                <p>Cara test di WhatsApp:</p>
+                <ol>
+                    <li>Buka WhatsApp Web: <a href="https://web.whatsapp.com" target="_blank">web.whatsapp.com</a></li>
+                    <li>Pilih chat (atau chat ke diri sendiri)</li>
+                    <li>Paste link dengan cache buster: <br>
+                        <code>https://validasi-v3.vercel.app?t=<span id="timestamp"></span></code>
+                        <button onclick="copyLinkWithTimestamp()">Copy Link</button>
+                    </li>
+                    <li>Tunggu 5-10 detik untuk preview muncul</li>
+                </ol>
+                <p class="warning">⚠️ WhatsApp cache sangat lama! Gunakan URL dengan query parameter berbeda</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📊 Image Dimensions Check</h2>
+            <p>Requirement untuk Open Graph:</p>
+            <ul>
+                <li class="success">✓ Minimum: 200x200px</li>
+                <li class="success">✓ Recommended: 1200x630px (1.91:1 ratio)</li>
+                <li class="success">✓ Maximum: 5MB</li>
+                <li class="success">✓ Format: JPG, PNG</li>
+            </ul>
+            <p>Image anda: <strong id="imageDimensions">Checking...</strong></p>
+        </div>
+
+        <div class="section">
+            <h2>🔧 Troubleshooting Tips</h2>
+            <ol>
+                <li><strong>Facebook tidak muncul:</strong>
+                    <ul>
+                        <li>Klik "Scrape Again" di Facebook Debugger minimal 3x</li>
+                        <li>Tunggu 5 menit, coba lagi</li>
+                        <li>Pastikan image accessible di browser: <a href="https://validasi-v3.vercel.app/og-image.png" target="_blank">Check Image</a></li>
+                    </ul>
+                </li>
+                <li><strong>WhatsApp tidak muncul:</strong>
+                    <ul>
+                        <li>WhatsApp cache SANGAT lama (24-48 jam)</li>
+                        <li>Gunakan URL dengan query parameter berbeda setiap test</li>
+                        <li>Contoh: ?v=1, ?v=2, ?t=12345, dll</li>
+                    </ul>
+                </li>
+                <li><strong>Image blur/terpotong:</strong>
+                    <ul>
+                        <li>Pastikan ratio 1.91:1 (1200x630)</li>
+                        <li>Konten penting di tengah (safe area)</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        function imageLoaded() {
+            const img = document.querySelector('.preview img');
+            const status = document.getElementById('imageStatus');
+            const dims = document.getElementById('imageDimensions');
+            
+            status.innerHTML = '<span class="success">✓ Image berhasil dimuat dari server!</span>';
+            dims.innerHTML = `<span class="success">${img.naturalWidth} x ${img.naturalHeight}px</span>`;
+            
+            if (img.naturalWidth === 1200 && img.naturalHeight === 630) {
+                dims.innerHTML += ' <span class="success">✓ Dimensi perfect!</span>';
+            }
+        }
+
+        function imageFailed() {
+            const status = document.getElementById('imageStatus');
+            status.innerHTML = '<span class="error">✗ Gagal memuat image! Cek apakah file og-image.png ada di public/</span>';
+        }
+
+        function copyLinkWithTimestamp() {
+            const timestamp = Date.now();
+            const link = `https://validasi-v3.vercel.app?t=${timestamp}`;
+            navigator.clipboard.writeText(link).then(() => {
+                alert('Link copied! Paste di WhatsApp untuk test.');
+            });
+        }
+
+        // Update timestamp display
+        document.getElementById('timestamp').textContent = Date.now();
+        setInterval(() => {
+            document.getElementById('timestamp').textContent = Date.now();
+        }, 1000);
+    </script>
+</body>
+</html>
